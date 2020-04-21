@@ -80,6 +80,7 @@ function UTF8_Encoding_ES6(string) {
   let byteString = '';
   const length = Array.from(string).length
   for (let s of string) {
+    // 获取码点
     codePoints.push(s.codePointAt())
   }
   let index = 0

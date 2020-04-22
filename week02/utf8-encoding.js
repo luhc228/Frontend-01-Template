@@ -16,8 +16,8 @@ function UTF8_Encoding(string) {
 }
 
 /**
- * ucs2 解码
- * JS 的编码方式为 ucs2 需要做解码
+ * ucs2 解码 获取码点
+ * 
  * @param {*} string 
  */
 function ucs2decode(string) {
@@ -59,12 +59,12 @@ function encodeCodePoint(codePoint) {
   else if ((codePoint & 0xFFFF0000) == 0) { // 3-byte sequence
     checkScalarValue(codePoint);
     symbol = stringFromCharCode(((codePoint >> 12) & 0x0F) | 0xE0);
-    symbol += createByte(codePoint, 6);
+    symbol += stringFromCharCode(((codePoint >> 6) & 0x3F) | 0x80);;
   }
   else if ((codePoint & 0xFFE00000) == 0) { // 4-byte sequence
     symbol = stringFromCharCode(((codePoint >> 18) & 0x07) | 0xF0);
-    symbol += createByte(codePoint, 12);
-    symbol += createByte(codePoint, 6);
+    symbol += stringFromCharCode(((codePoint >> 12) & 0x3F) | 0x80);;
+    symbol += stringFromCharCode(((codePoint >> 6) & 0x3F) | 0x80);;
   }
   symbol += stringFromCharCode((codePoint & 0x3F) | 0x80);
   return symbol;

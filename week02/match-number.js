@@ -5,8 +5,7 @@
  */
 function matchNumber(input) {
   input = typeof input === 'string' ? input : String(input)
-  console.log(input)
-  const reg = /(^\d*(\.)?\d*$)|(^\d*(\.)?\d*[Ee]\d+$)|(^0b[01]+$)|(^0o[0-7]+$)|(^0x[0-9a-fA-F]+$)/g;
+  const reg = /^((\d*(\.)?\d*)|(\d*(\.)?\d*[Ee]\d+)|(0b[01]+)|(0o[0-7]+)|(0x[0-9a-fA-F]+))$/g;
 
   return reg.test(input)
 }

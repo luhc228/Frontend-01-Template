@@ -11,7 +11,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}\\week03\\convertStringToNumber.js"
+      "program": "${workspaceFolder}\\week03\\convertNumberToString.js"
     }
   ]
 }

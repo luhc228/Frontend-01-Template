@@ -1,5 +1,7 @@
 const net = require('net');
 const parser = require('./parser')
+const images = require('images')
+const render = require('./render')
 
 /**
  * 使用状态机
@@ -215,6 +217,14 @@ void async function () {
     }
   })
   const response = await request.send()
+
   let dom = parser.parseHTML(response.body)
-  console.log(dom)
+
+  console.log(JSON.stringify(dom, null, "      "))
+
+  let viewport = images(800, 600)
+
+  render(viewport, dom)
+
+  viewport.save("viewport.jpg")
 }()

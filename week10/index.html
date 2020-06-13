@@ -32,9 +32,9 @@
 
 <script>
   let pattern = [
-    [1, 2, 0],
-    [0, 1, 0],
-    [0, 0, 2]
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0]
   ]
   let color = 1;
   function show() {
@@ -49,14 +49,15 @@
           pattern[i][j] === 2 ? "X" :
             pattern[i][j] === 1 ? "O" :
               "";
-        cell.addEventListener("click", () => move(j, i))
+        cell.addEventListener("click", () => userMove(j, i))
         board.appendChild(cell);
       }
       board.appendChild(document.createElement("br"))
     }
   }
   show() // init
-  function move(x, y) {
+
+  function userMove(x, y) {
     if (pattern[y][x] !== 0) {
       return;
     }
@@ -72,6 +73,19 @@
     if (willWin(pattern, color)) {
       console.log(color === 1 ? 'O' : 'X', 'will win.')
     }
+    computerMove()
+  }
+
+  function computerMove() {
+    let choice = bestChoice(pattern, color)
+    if (choice.point) {
+      pattern[choice.point[1]][choice.point[0]] = color;
+    }
+    if (check(pattern, color)) {
+      alert(color == 2 ? "X is winner!" : "O is winner")
+    }
+    color = 3 - color;
+    show()
   }
 
   function check(pattern, color) {
@@ -148,8 +162,22 @@
     }
     return null
   }
-  // 自己没有 willWin, 对方 willWin >= 2
+  let openings = new Map();
+  openings.set([
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0]
+  ].toString(), {
+    point: [1, 1],
+    result: 0
+  })
+
+  // 自己没有 willWin, 对方 willWin >= 2, 自己肯定会输了
   function bestChoice(pattern, color) {
+    if (openings.has(pattern.toString())) {
+      return openings.get(pattern.toString())
+    }
+
     let point = willWin(pattern, color);
     if (point) {
       return {
@@ -158,7 +186,7 @@
       }
     }
     let result = -1;
-    for (let i = 0; i < 3; i++) {
+    outer: for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
         if (pattern[i][j] !== 0) {
           continue
@@ -169,6 +197,9 @@
         if (-opp.result >= result) { // 对面最坏的情况是我方最好的情况
           point = [j, i]
           result = -opp.result  // 我方赢
+        }
+        if (result === 1) {
+          break outer;
         }
       }
     }

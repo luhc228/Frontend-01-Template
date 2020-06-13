@@ -32,9 +32,9 @@
 
 <script>
   let pattern = [
-    [2, 0, 0],
+    [1, 2, 0],
     [0, 1, 0],
-    [0, 0, 0]
+    [0, 0, 2]
   ]
   let color = 1;
   function show() {
@@ -142,11 +142,40 @@
         let tmp = clone(pattern);
         tmp[i][j] = color;
         if (check(tmp, color)) {
-          return true
+          return [j, i]
         }
       }
     }
-    return false
+    return null
+  }
+  // 自己没有 willWin, 对方 willWin >= 2
+  function bestChoice(pattern, color) {
+    let point = willWin(pattern, color);
+    if (point) {
+      return {
+        point: point,
+        result: 1 // 赢
+      }
+    }
+    let result = -1;
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (pattern[i][j] !== 0) {
+          continue
+        }
+        let tmp = clone(pattern)
+        tmp[i][j] = color;
+        let opp = bestChoice(tmp, 3 - color)  // 对方的结果
+        if (-opp.result >= result) { // 对面最坏的情况是我方最好的情况
+          point = [j, i]
+          result = -opp.result  // 我方赢
+        }
+      }
+    }
+    return {
+      point: point,
+      result: point ? result : 0,
+    }
   }
 </script>
 

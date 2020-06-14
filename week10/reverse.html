@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reverse</title>
+</head>
+
+<body>
+  <div id="a">
+    <span>1</span>
+    <p>2</p>
+    <a>3</a>
+    <div>4</div>
+  </div>
+
+  <script>
+    const element = document.getElementById("a")
+    // function reverseChildren(element) {
+    //   let children = Array.prototype.slice.call(element.childNodes);
+    //   for (let child of children) {
+    //     // element.removeChild(child)
+    //     element.innerHTML = "";
+    //   }
+    //   children.reverse();
+    //   for (let child of children) {
+    //     element.appendChild(child)
+    //   }
+    // }
+
+    // function reverseChildren(element) {
+    //   var l = element.childNodes.length;
+    //   while (l-- > 0) {
+    //     // 动态减少
+    //     element.appendChild(element.childNodes[l])
+    //   }
+    // }
+
+    function reverseChildren(element) {
+      let range = new Range()
+      console.log(Array.prototype.slice(element.childNodes))
+      range.selectNodeContents(element); // 选中 element 子元素
+
+      let fragement = range.extractContents() // 第一次重排：一次把子元素全摘下来(移除)
+      let l = fragement.childNodes.length;
+
+      console.log("length", l)
+      while (l-- > 0) {
+        fragement.appendChild(fragement.childNodes[l]) // 不会发生重排和重绘
+      }
+      element.appendChild(fragement) // 第二次重排
+    }
+
+    reverseChildren(element);
+  </script>
+</body>
+
+</html>

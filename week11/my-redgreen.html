@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>红绿灯问题</title>
+  <style>
+    body {
+      display: flex;
+    }
+
+    div {
+      margin: 10px;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="red"></div>
+  <div class="yellow"></div>
+  <div class="green"></div>
+</body>
+
+<script>
+  const colors = ['green', 'red', 'yellow']
+  function lightOn(color, timeout) {
+    console.log(color, timeout);
+    return new Promise((resolve) => {
+      let ele = document.getElementsByClassName(color)[0];
+      ele.style.backgroundColor = color;
+      setTimeout(() => {
+        ele.style.backgroundColor = 'white';
+        resolve()
+      }, timeout)
+    })
+
+  }
+
+
+  void async function () {
+    while (1) {
+      await lightOn('green', 10000);
+      await lightOn('yellow', 2000);
+      await lightOn('red', 5000);
+    }
+  }()
+</script>
+
+</html>

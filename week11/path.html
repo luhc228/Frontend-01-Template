@@ -73,7 +73,7 @@
       }
       cell.addEventListener("mousemove", () => {
         if (mousedown) {
-          if (clear) {
+          if (clear) { // 右键清除掉
             cell.style.backgroundColor = "";
             map[100 * y + x] = 0;
           } else {
@@ -85,12 +85,14 @@
       container.appendChild(cell);
     }
   }
-  let mousedown = false;
+  let mousedown = false;  // 标志位
   let clear = false;
+
   document.addEventListener("mousedown", e => {
     mousedown = true;
-    clear = (e.which === 3)
+    clear = (e.which === 3) // 1, 2, 3 左中右键
   })
+
   document.addEventListener("mouseup", () => mousedown = false);
 
   document.addEventListener("contextmenu", e => e.preventDefault())
@@ -101,7 +103,12 @@
     })
   }
 
-  function findPath(map, start, end) {
+  /**
+    map 所有的点状态
+    start 开始点
+    end 结束点
+  */
+  async function findPath(map, start, end) {
     map = map.slice();
     let queue = [start];
 
@@ -111,28 +118,42 @@
       }
       if (x < 0 || y < 0 || x >= 100 || y >= 100) {
         return;
-      } 666
-      map[100 * y + x] = 2;
-      // container.children[y * 100 + x].style.backgroundColor = "lightgreen";
-      // await sleep(2)
+      }
+      map[100 * y + x] = pre;
+      container.children[y * 100 + x].style.backgroundColor = "lightgreen";
+      await sleep(2);
       queue.push([x, y]);
     }
 
     while (queue.length) {
       let [x, y] = queue.shift();   // pop unshift / push shift
-      console.log(x, y)
-      if (x === end[0] && y === end[1]) {
+      console.log(x, y);
+
+      if (x === end[0] && y === end[1]) {       // 找到目标点
         let path = [];
-        return true
+        while (x !== start[0] || y !== start[1]) {
+
+          path.push(map[y * 100 + x])
+          container.children[y * 100 + x].style.backgroundColor = "pink";
+          [x, y] = map[y * 100 + x]; // pre 节点
+          console.log(x, y)
+        }
+        return path
       }
       const pre = [x, y];
-      insert(x - 1, y, pre)
-      insert(x + 1, y, pre)
-      insert(x, y - 1, pre)
-      insert(x, y + 1, pre)
-      return false
+      await insert(x - 1, y, pre)
+      await insert(x + 1, y, pre)
+      await insert(x, y - 1, pre)
+      await insert(x, y + 1, pre)
+
+      await insert([x - 1, y - 1], pre)
+      await insert([x + 1, y - 1], pre)
+      await insert([x - 1, y + 1], pre)
+      await insert([x + 1, y + 1], pre)
     }
+    return null
   }
+  // findPath(map, [0, 0], [50, 50])
 </script>
 
 </html>

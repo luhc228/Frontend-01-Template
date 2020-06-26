@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RegExp</title>
+</head>
+
+<body>
+  <script>
+    // 如果未使用 g 标志，则仅返回第一个完整匹配及其相关的捕获组
+    console.log("abc".match(/a(b)c/))
+    // 如果使用 g 标志，则将返回与完整正则表达式匹配的所有结果，但不会返回捕获组。
+    console.log("abc".match(/a(b)c/g))
+    // () 捕获
+    console.log("[a=value]".match(/\[([^=]+)=([^\]]+)\]/))
+    // (?:) 不捕获
+    console.log("[a=value]".match(/\[(?:[^=]+)=(?:[^\]]+)\]/))
+
+    console.log("abc".replace(/a(b)c/, function (str, $1) {
+      console.log(str, $1)
+      return $1 + $1
+    }))
+    "abc".replace(/a(b)c/, "$1$1")
+    "abc".replace(/a(b)c/, "$1$1")
+
+  </script>
+</body>
+
+</html>

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>使用 exec 实现代码关键字高亮</title>
   <style>
     .keywords {
       color: blue
@@ -17,6 +17,11 @@
     .identifier {
       color: skyblue;
     }
+
+    body {
+      background-color: black;
+      color: white;
+    }
   </style>
 </head>
 
@@ -24,14 +29,39 @@
   <pre id="container"></pre>
 
   <script>
+    // exec 对一段长文本进行依次匹配
     var source = `
       function sleep(t) {
         return new Promise((resolve) => {
           setTimeout(resolve, t)
         })
       }
-    `
-    var regexp = /(function|new|return)|([ \t\n\r]+)|([a-zA-Z][a-zA-Z0-9]*)|([\(\)])/;
+    `;
+    // 关键字 空白符 标识符 符号
+    var regexp = /(function|new|return)|([ \t\n\r]+)|([a-zA-Z][a-zA-Z0-9]*)|([\(\)\}\{\,\;])/g;
+
+    var dictionary = ["keywords", "whitespace", "indentifier", "punctuator"]
+
+    var token = null;
+    var lastIndex = 0;
+
+    var container = document.getElementById("container")
+    do {
+      lastIndex = regexp.lastIndex;
+      token = regexp.exec(source);
+      if (!token) {
+        break
+      }
+      let text = document.createElement("span");
+      text.textContent = token[0]; // 匹配的字符
+      for (let i = 1; i < 5; i++) {
+        if (token[i]) {
+          text.classList.add(dictionary[i - 1])
+          console.log(dictionary[i - 1], token[0])
+        }
+      }
+      container.appendChild(text);
+    } while (token && regexp.lastIndex > lastIndex)
   </script>
 </body>
 

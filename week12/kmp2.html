@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高效版的 KMP </title>
+</head>
+
+<body>
+
+</body>
+<script>
+  function find(source, pattern) {
+    let table = new Array(pattern.length).fill(0);
+    let k = 0;
+    for (let j = 1; j < pattern.length; j++) {
+      if (pattern[j] === pattern[k]) {
+        k++
+      } else {
+        k = 0
+      }
+      table[j] = k;
+    }
+    console.log(table)
+    let j = 0;
+    for (let i = 0; i < source.length; i++) {
+      if (source[i] === pattern[j]) {
+        j++
+      } else {
+        // 第一步
+        // j = 0;  // 这里的实现，需要手工改成 j = 2
+        // if (source[i] === pattern[j]) {
+        //   j++
+        // }
+
+        // 第二步
+        // j = table[j - 1];
+        // if (source[i] === pattern[j]) {
+        //   j++;
+        // }
+
+        // 第三步 适配更多的 cases
+        while (source[i] !== pattern[j] && j > 0) {
+          j = table[j - 1]
+        }
+        if (source[i] === pattern[j]) {
+          j++;
+        } else {
+          j = 0;
+        }
+      }
+      if (j === pattern.length) {
+        return true
+      }
+    }
+    return false
+  }
+  // console.log(find("abcxyz", "xy"));
+  // console.log(find("abcxxyz", "xy"));
+  console.log(find("abcabcabx", "abcabx"));
+</script>
+
+</html>

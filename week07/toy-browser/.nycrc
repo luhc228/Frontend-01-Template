@@ -1,0 +1,10 @@
+{
+  "all": true,
+  "include": [
+    "src/parser.js"
+  ],
+  "exclude": [
+    "**/*.spec.js"
+  ],
+  "extends": "@istanbuljs/nyc-config-babel"
+}

@@ -418,11 +418,16 @@ function endTagOpen(c) {
 
 module.exports.parseHTML = function parseHTMl(html) {
   let state = data;
+  stack = [{ type: "document", children: [] }]
+
   for (let c of html) {
     state = state(c)
+    if (stack[stack.length - 1].tagName === "script" && state === data) {
+      state = scriptData
+    }
   }
 
   state = state(EOF)
-  console.log(stack[0]);
+  console.log(stack);
   return stack[0]
 }

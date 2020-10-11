@@ -65,28 +65,33 @@ let current
 
 while (queue.length) {
   current = queue.shift();
-  if (set.has(current.current)) {
+  console.log('current', current);
+  if (set.has(current.object)) {
     continue
   }
+
   console.log(current.path.join("."))
   set.add(current.object)
 
   for (let p of Object.getOwnPropertyNames(current.object)) {
-    var property = Object.getOwnPropertyDescriptor(current.object, p)
+    var property = Object.getOwnPropertyDescriptor(current.object, p);
+
     if (property.hasOwnProperty("value") && (
-      (property.value !== null && (typeof property.value === "object" || typeof property.value === "object"))
+      (property.value !== null && (typeof property.value === "object" || typeof property.value === "function"))
     ) && property.value instanceof Object) {
       queue.push({
         object: property.value,
         path: current.path.concat([p])
       })
     }
+
     if (property.hasOwnProperty("set") && typeof property.set === 'function') {
       queue.push({
         object: property.set,
         path: current.path.concat([p])
       })
     }
+
     if (property.hasOwnProperty("get") && typeof property.get === 'function') {
       queue.push({
         object: property.get,
